@@ -15,24 +15,43 @@ browser = webdriver.Chrome("/home/james/Desktop/chromedriver", chrome_options = 
 class Timetable(object):
 	def get_index(self,day):
 		days = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday']
-		try:
+		try:	
 			if days.index(day) < 2:
-				day = "None"
-				return day
+				day == "Weekend"
+			elif days.index(day) >= 2:
+				day = days.index(day)
+		except ValueError:
+			day = 'Invalid'
+		return day
 
-			return days.index(day)
+	def get_module_name(self, module_code):
+		code_dictionary = {
+			'CA304': 'Computer Networks 2',
+			'CA314': 'OO Analysis and Design',
+			'CA318': 'Advanced Algorithms and A.I. Search',
+			'CA320': 'Computability and Complexibility',
+			'CA341': 'Comparative Programming Languages',
+			'CA357': 'User Interface and Completion'
+			}
+		
+		return code_dictionary.get(module_code)
 
-		except:
-			return 'Invalid day of week'	
+		
+
 
 	def get_table(self, day):
 		schedule = []
 		mod_loc = []
 		day = self.get_index(day)
 		
-		if day == "None":
+		if day == "Weekend":
 			print("No college today")
 			sys.exit()
+
+		elif day == "Invalid":
+			print("Invalid Day of week. Please try again")
+			timetable.get_table(input())
+
 
 		browser.get("https://opentimetable.dcu.ie")
 		time.sleep(2)
@@ -67,18 +86,16 @@ class Timetable(object):
 
 		for elem in mod_loc:
 			if len(elem) > 1:
+				mod_code = elem[0][:5]
 				if ':00' in elem[1]:
-					print('Module: ' + elem[0][:5] + '\n' + 'Time & Place: ' + elem[1][4:] + '\n')
-			else:
-				pass
+					print('Module: ' + self.get_module_name(mod_code) + '\n' + 'Time & Place: ' + elem[1][4:] + '\n')
+
+
 
 def main():
 	timetable = Timetable()
-	try:
-		timetable.get_table(sys.argv[1])
-	except IndexError:
-		print('Please enter a weekday')
-		timetable.get_table(input())
+	timetable.get_table(sys.argv[1])
+
 
 if __name__ == '__main__':
 	main()
