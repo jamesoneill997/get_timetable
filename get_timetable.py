@@ -33,10 +33,10 @@ class Timetable(object):
 			'CA341': 'Comparative Programming Languages',
 			'CA357': 'User Interface and Completion'
 			}
+		if code_dictionary.get(module_code) == None:
+			return module_code	
 		
 		return code_dictionary.get(module_code)
-
-		
 
 
 	def get_table(self, day):
@@ -57,7 +57,7 @@ class Timetable(object):
 		time.sleep(2)
 		browser.find_element_by_xpath("/html/body/app-root/app-layout/app-desktop/div[2]/div/div[1]/app-publish/div/div[1]/div[1]/div[2]/app-entities-search-and-select/div/div[1]/div/app-entity-selector/select/option[4]").click()
 		time.sleep(1)
-		browser.find_element_by_id("textSearch").send_keys("CASE3")
+		browser.find_element_by_id("textSearch").send_keys("CASE2")
 		time.sleep(2)
 		browser.find_element_by_xpath("/html/body/app-root/app-layout/app-desktop/div[2]/div/div[1]/app-publish/div/div[1]/div[1]/div[2]/app-entities-search-and-select/div/div[3]/app-selectable-list/div/div[1]/div/input").click()
 		table_text = browser.find_element_by_xpath("/html/body/app-root/app-layout/app-desktop/div[2]/div/div[1]/app-publish/div/div[2]/div/div/div/div").text
@@ -86,9 +86,9 @@ class Timetable(object):
 
 		for elem in mod_loc:
 			if len(elem) > 1:
-				mod_code = elem[0][:5]
+				mod_code = self.get_module_name(elem[0][:5])
 				if ':00' in elem[1]:
-					print('Module: ' + self.get_module_name(mod_code) + '\n' + 'Time & Place: ' + elem[1][4:] + '\n')
+					print('Module: ' + mod_code + '\n' + 'Time & Place: ' + elem[1][4:] + '\n')
 
 
 
